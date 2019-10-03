@@ -25,4 +25,7 @@ namespace firefly::std {
         }
         return write;
     }
+
+    template <class InputIt, class Size, class OutputIt>
+    OutputIt copy_n()
 }  // namespace firefly::std

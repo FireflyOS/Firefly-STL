@@ -33,3 +33,6 @@
 .idea
 
 main.cpp
+
+CMakeLists.txt
+cmake-build-debug
