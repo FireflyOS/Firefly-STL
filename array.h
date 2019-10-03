@@ -1,7 +1,7 @@
 #pragma once
-#include "stl/algorithm.h"
-#include <stl/cstdlib/cstdint.h>
-#include <stl/initializer_list.h>
+#include "algorithm.h"
+#include <cstdlib/cstdint.h>
+#include <initializer_list.h>
 
 namespace firefly::std {
     template <typename T, size_t N>

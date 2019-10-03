@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utility.h"
+#include <cstdlib/cstdint.h>
 
 namespace firefly::std {
     // Tuple implementation for actual types.
