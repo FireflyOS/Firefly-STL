@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCDFAInspection"
 #pragma once
 
 #include "utility.h"
@@ -6,13 +8,13 @@
 namespace firefly::std {
     // Tuple implementation for actual types.
     template<size_t _index, typename T>
-    class _tuple {
+    class _tuple_i {
     public:
-        _tuple(T const &v) {
+        _tuple_i(T const &v) {
             val = v;
         }
 
-        _tuple(T &&v) {
+        _tuple_i(T &&v) {
             val = move(v);
         }
 
@@ -26,7 +28,7 @@ namespace firefly::std {
 
     // Used when no arguments are specified. Generic tuple.
     template<size_t _index, typename... Types>
-    class _tuple_m {
+    class _tuple_r {
     };
 
     template<size_t _index, typename L, typename... types>
@@ -94,3 +96,4 @@ namespace firefly::std {
         return compare_tuple<sizeof...(Args) - 1>(t1, t2);
     }
 }
+#pragma clang diagnostic pop
