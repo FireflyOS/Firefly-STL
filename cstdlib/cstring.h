@@ -1,13 +1,14 @@
 #pragma once
+
 #include "cstdint.h"
 
-inline size_t strlen(const char* str) {
+inline size_t strlen(const char *str) {
     size_t _sz{};
     while (str[_sz++]);
     return _sz;
 }
 
-inline size_t strnlen(const char* str) {
+inline size_t strnlen(const char *str) {
     return strlen(str) + 1;
 }
 

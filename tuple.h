@@ -2,8 +2,8 @@
 #pragma ide diagnostic ignored "OCDFAInspection"
 #pragma once
 
-#include "utility.h"
 #include "cstdlib/cstdint.h"
+#include "utility.h"
 
 namespace firefly::std {
     // Tuple implementation for actual types.
@@ -36,9 +36,10 @@ namespace firefly::std {
                                           public _tuple_r<_index + 1, types...> {
     public:
         template<typename CL, typename... CArgs>
-        _tuple_r(CL &&arg, CArgs &&... args) : _tuple_i<_index, CL>(forward<CL>(arg)),
-                                               _tuple_r<_index + 1, types...>(
-                                                       forward<CArgs>(args)...) {
+        _tuple_r(CL &&arg, CArgs &&... args)
+                : _tuple_i<_index, CL>(forward<CL>(arg)),
+                  _tuple_r<_index + 1, types...>(
+                          forward<CArgs>(args)...) {
         }
     };
 
@@ -47,7 +48,8 @@ namespace firefly::std {
     public:
         // The constructor uses the same recursion as the inheritance
         template<typename... CArgs>
-        tuple(CArgs &&... args) : _tuple_r<0, L, types...>(forward<CArgs>(args)...) {
+        tuple(CArgs &&... args)
+                : _tuple_r<0, L, types...>(forward<CArgs>(args)...) {
         }
 
         template<typename... Args>
@@ -95,5 +97,5 @@ namespace firefly::std {
     bool operator==(tuple<Args...> &t1, tuple<Args...> &t2) {
         return compare_tuple<sizeof...(Args) - 1>(t1, t2);
     }
-}
+}  // namespace firefly::std
 #pragma clang diagnostic pop

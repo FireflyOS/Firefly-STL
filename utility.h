@@ -9,17 +9,14 @@ namespace firefly::std {
                 remove_reference_t<T> &&>(value);
     };
 
-    // Forward implementation.
     template<typename T>
-    inline T &&forward(typename remove_reference<T>::type &t) noexcept {
-        return static_cast<T &&>(t);
+    constexpr T &&forward(typename remove_reference<T>::type &__t) noexcept {
+        return static_cast<T &&>(__t);
     }
 
     template<typename T>
-    inline T &&forward(typename remove_reference<T>::type &&t) noexcept {
-        static_assert(!is_lvalue_reference<T>::value,
-                      "Can not forward an rvalue as an lvalue.");
-        return static_cast<T &&>(t);
+    constexpr T &&forward(typename remove_reference<T>::type &&__t) noexcept {
+        return static_cast<T &&>(__t);
     }
 
     // Pair implementation.
@@ -52,8 +49,8 @@ namespace firefly::std {
             second = forward<U2>(other.second);
         }
 
-        template <typename T>
-        void swap(T& one, T& two) {
+        template<typename T>
+        void swap(T &one, T &two) {
             auto temp = one;
             one = two;
             two = temp;
