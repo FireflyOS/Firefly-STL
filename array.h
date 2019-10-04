@@ -1,34 +1,37 @@
 #pragma once
+
 #include "algorithm.h"
 #include "cstdlib/cstdint.h"
 #include "initializer_list.h"
 
 namespace firefly::std {
-    template <typename T, size_t N>
+    template<typename T, size_t N>
     class array {
         T data[N];
 
     public:
-        using iterator = T*;
-        using const_iterator = const T*;
+        using iterator = T *;
+        using const_iterator = const T *;
 
         array() = default;
-        array(::std::initializer_list<T> const& arr) {
+
+        array(::std::initializer_list<T> const &arr) {
             firefly::std::copy(
-                arr.begin(), arr.end(), data);
+                    arr.begin(), arr.end(), data);
         }
 
-        array& operator=(array const&) = default;
-        array& operator=(array&&) = default;
+        array &operator=(array const &) = default;
 
-        array(array const& arr) noexcept {
+        array &operator=(array &&) = default;
+
+        array(array const &arr) noexcept {
             firefly::std::copy(
-                arr.begin(), arr.end(), this->begin());
+                    arr.begin(), arr.end(), this->begin());
         }
 
-        array(array&& arr) noexcept {
+        array(array &&arr) noexcept {
             firefly::std::copy(
-                arr.begin(), arr.end(), this->begin());
+                    arr.begin(), arr.end(), this->begin());
         }
 
         [[nodiscard]] iterator begin() {
@@ -47,11 +50,11 @@ namespace firefly::std {
             return data + N;
         }
 
-        [[nodiscard]] T& operator[](size_t idx) noexcept {
+        [[nodiscard]] T &operator[](size_t idx) noexcept {
             return data[idx];
         }
 
-        [[nodiscard]] T const& operator[](size_t idx) const noexcept {
+        [[nodiscard]] T const &operator[](size_t idx) const noexcept {
             return data[idx];
         }
 
