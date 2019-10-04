@@ -44,7 +44,7 @@ namespace firefly::std {
         }
 
         optional& operator=(optional const&) = default;
-        optional& operator=(operator&&) = default;
+        optional& operator=(optional&&) = default;
         ~optional() = default;
 
         T* operator->() {
