@@ -3,6 +3,8 @@
 #include "algorithm.h"
 #include "cstdlib/cstdint.h"
 #include "initializer_list.h"
+#include <cstdlib/cstring.h>
+
 
 namespace firefly::std {
     template<typename T, size_t N>
@@ -15,7 +17,8 @@ namespace firefly::std {
 
         array() = default;
 
-        array(::std::initializer_list<T> const &arr) {
+        array(::std::initializer_list<T> const &arr)
+            : data{} {
             firefly::std::copy(
                     arr.begin(), arr.end(), data);
         }

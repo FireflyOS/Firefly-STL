@@ -24,6 +24,12 @@ void memcpy(void* dest, const void* src, size_t count) {
     }
 }
 
+void *memset(void* dest, int value, size_t count) {
+    auto _ptr = reinterpret_cast<char*>(dest);
+    for (size_t i = 0; i < count; _ptr[i++] = value);
+    return dest;
+}
+
 // inline size_t strlen(const vga_char* str) {
 //     size_t _sz{};
 //     while (str[_sz++].codepoint);

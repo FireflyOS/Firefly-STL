@@ -32,6 +32,7 @@ namespace firefly::std {
     void sort(RandomIt first, RandomIt last) {
         if (first < last) {
             int partitionIndex = partition(first, last);
+            (void) partitionIndex;
         }
     }
 
