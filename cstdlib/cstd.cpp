@@ -1,4 +1,4 @@
-#include <cstdlib/cstdint.h>
+#include "cstdint.h"
 
 extern "C" void* memset(void* dest, int value, size_t count) {
     auto _ptr = reinterpret_cast<char*>(dest);
