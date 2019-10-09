@@ -27,13 +27,14 @@ namespace firefly::std {
         return write;
     }
 
-
+    /*
     template <class RandomIt>
     void sort(RandomIt first, RandomIt last) {
         if (first < last) {
             int partitionIndex = partition(first, last);
         }
     }
+     */
 
     /*
     template <class RandomIt, class Compare>
