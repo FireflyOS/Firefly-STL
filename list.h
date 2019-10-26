@@ -25,7 +25,7 @@ namespace firefly::std {
         /**
          *                      Construct a new list
          */
-        list_node() : next(this), prev(this) {}
+        list_node() : next { this }, prev { this } {}
 
         /**
          *                      Adds a node following this one
