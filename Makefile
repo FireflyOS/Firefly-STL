@@ -8,4 +8,7 @@ CXX_CSTDLIB_FILES = $(wildcard $(SRC_DIR)/cstdlib/*.cpp)
 build:
 	clang++ $(CXX_FLAGS) -c $(CXX_FILES) $(CXX_CSTDLIB_FILES)
 
+clean:
+	rm cstd.o
+
 all: build
