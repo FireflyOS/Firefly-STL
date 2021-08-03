@@ -1,14 +1,4 @@
-CXX_FLAGS = -m64 -std=c++17 -Wall -Wextra -pedantic -Werror -g -O2 -nostdlib -fno-builtin -fno-PIC -mno-red-zone -fno-stack-check -fno-stack-protector -fno-omit-frame-pointer -ffreestanding -fno-exceptions -fno-rtti
-
-# all source code
-SRC_DIR = .
-CXX_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-CXX_CSTDLIB_FILES = $(wildcard $(SRC_DIR)/cstdlib/*.cpp)
+-include ../../flags.mk
 
 build:
-	clang++ $(CXX_FLAGS) -c $(CXX_FILES) $(CXX_CSTDLIB_FILES)
-
-clean:
-	rm cstd.o
-
-all: build
+	$(CC) $(STL_CXX_FLAGS) -c $(STL_CXX_FILES) $(STL_CXX_CSTDLIB_FILES)
