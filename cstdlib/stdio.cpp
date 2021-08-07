@@ -2,7 +2,11 @@
 #include "stdio.h"
 #include "cstring.h"
 
-//TODO: Is printf needed?
+// #ifdef I386
+#include <i386/libk++/iostream.h>
+// #elif x86_64
+// #include <x86_64/libk++/iostream.h>
+// #endif
 
 char itoc(int num)
 {
@@ -14,32 +18,23 @@ char itoh(int num)
     return num - 10 + 'a';
 }
 
-char *strrev(char *str)
-{   
-    char *start = str; //Start of the string  (head)
-    char *end = start;   //end of the string    (tail) (Points to the beginning of the string)
+char *strrev(char *src)
+{
+	static char temp;
+	int src_string_index = 0;
+	int last_char = strlen(src) - 1;
 
-    while (*end) end++;
-    end--;
+	for (; src_string_index < last_char; src_string_index++)
+	{
+		temp = src[src_string_index]; 			  // Save current character
+		src[src_string_index] = src[last_char];   // Swap out the current char with the last char
+		src[last_char] = temp;	 				  // Swap out last character with the current character
+		last_char--;
+	}
 
-    //Now:
-    //start points to the first char
-    // end   points to the last  char
-    while (start < end)
-    {
-        // char e = *end, s = *start;
-        auto tmp = *start;
-        *start = *end;
-        *end = tmp;
-        ++start, --end;
-    }
+	src[strlen(src)-1+1] = '\0';
 
-    for (size_t i = 0; i < strlen(str); i++)
-    {
-        str[i+1] = end[i];
-    }
-
-    return str;
+    return src;
 }
 
 char *itoa(int num, char *str, int base)
@@ -74,4 +69,36 @@ int atoi(const char *str) {
     }
 
     return ret;
+}
+
+void printf(const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    int i = 0;
+    int len = strlen(fmt);
+    
+    for (; i < len; i++)
+    {
+        switch (fmt[i])
+        {
+            case '%':
+            {
+                switch (fmt[i+1])
+                {
+                    case 'c':
+                    {
+                        char arg = va_arg(ap, int);
+                        firefly::libkern::print((char)arg);
+                        i += 2;
+                        break;
+                    }
+                }
+            }   
+            default:
+                firefly::libkern::print((char)fmt[i]);
+                va_end(ap);
+                break;
+        }
+    }
 }

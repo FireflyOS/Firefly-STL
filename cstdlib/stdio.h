@@ -7,3 +7,4 @@ void putsn(const char *str, int n);
 char *itoa(int num, char *str, int base);
 int atoi(const char *str);
 char *strrev(char *str);
+void printf(const char *fmt, ...);
