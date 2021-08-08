@@ -173,3 +173,14 @@ char *strtok(char *s, const char *delimiters) {
     next = c;
     return token;
 }
+
+int digitcount(uint32_t num)
+{
+    int res = 0;
+    while (num != 0)
+    {
+        ++res;
+        num /= 10;
+    }
+    return res;
+}

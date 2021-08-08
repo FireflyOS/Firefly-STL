@@ -1,17 +1,22 @@
 #include "stdio.h"
+
 #include "cstring.h"
 
 #include <stdarg.h>
 
-// #ifdef I386
+#ifdef I386
 #include <i386/libk++/iostream.h>
-// #elif x86_64
-// #include <x86_64/libk++/iostream.h>
-// #endif
+#else
+#include <x86_64/libk++/iostream.h>
+#endif
 
 char itoc(int num) { return '0' + num; }
 
-char itoh(int num) { return num - 10 + 'a'; }
+char itoh(int num, bool upper) {
+    if (upper)
+        return num - 10 + 'A';
+    return num - 10 + 'a';
+}
 
 char* strrev(char* src) {
     static char temp;
@@ -31,18 +36,42 @@ char* strrev(char* src) {
     return src;
 }
 
-char* itoa(int num, char* str, int base) {
-    int counter = 0;
-    int digit = 0;
+char* itoa(size_t num, char* str, int base) {
+    size_t buffer_sz = 20;
+    size_t counter = 0;
+    size_t digit = 0;
 
-    while (num != 0) {
+    while (num != 0 && counter < buffer_sz) {
         digit = (num % base);
         if (digit > 9) {
-            str[counter++] = itoh(digit);
+            str[counter++] = itoh(digit, false);
         } else {
             str[counter++] = itoc(digit);
         }
         num /= base;
+    }
+
+    str[counter] = '\0';
+    return strrev(str);
+}
+
+char* itoa(size_t num, char* str, int base, bool upper) {
+    [[maybe_unused]] size_t buffer_sz = 20;
+    [[maybe_unused]] size_t counter = 0;
+    [[maybe_unused]] size_t digit = 0;
+
+    if (! upper) {
+        return itoa(num, str, base);
+    } else {
+        while (num != 0 && counter < buffer_sz - 1) {
+            digit = (num % base);
+            if (digit > 9) {
+                str[counter++] = itoh(digit, true);
+            } else {
+                str[counter++] = itoc(digit);
+            }
+            num /= base;
+        }
     }
 
     str[counter] = '\0';
@@ -60,11 +89,12 @@ int atoi(const char* str) {
     return ret;
 }
 
-void printf(const char* fmt, ...) {
+int printf([[maybe_unused]] const char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     int i = 0;
     int len = strlen(fmt);
+    int res = 0;
 
     for (; i < len; i++) {
         switch (fmt[i]) {
@@ -73,15 +103,64 @@ void printf(const char* fmt, ...) {
                     case 'c': {
                         char arg = va_arg(ap, int);
                         firefly::libkern::print((char)arg);
+                        i += 2, ++res;
+                        break;
+                    }
+
+                    case 's': {
+                        char* arg = va_arg(ap, char*);
+                        firefly::libkern::print(arg);
+                        i += 2, (res += 2 + strlen(arg));
+                        break;
+                    }
+
+                    case 'i':
+                    case 'd': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::libkern::print(itoa(arg, buff, 10));
+                        res += digitcount(arg);
                         i += 2;
                         break;
                     }
+
+                    case 'x': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::libkern::print(itoa(arg, buff, 16));
+                        res += strlen(buff);
+                        i += 2;
+                        break;
+                    }
+                    case 'X': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::libkern::print(itoa(arg, buff, 16, true));
+                        res += strlen(buff);
+                        i += 2;
+                        break;
+                    }
+
+                    case 'o': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::libkern::print(itoa(arg, buff, 8));
+                        i += 2;
+                        break;
+                    }
+                    default:
+                        va_end(ap);
+                        break;
                 }
             }
             default:
-                firefly::libkern::print((char)fmt[i]);
+                firefly::libkern::print(fmt[i]);
                 va_end(ap);
+                res++;
                 break;
         }
     }
+    return res;
 }
+
+// int sprintf()

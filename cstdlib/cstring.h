@@ -21,6 +21,7 @@ extern char *strchr(const char *str, int c);
 extern char *strchrn(const char *str, int c, int n);
 extern int toupper(char c);
 extern char *strtok(char *s, const char *delimiters);
+extern int digitcount(uint32_t num);
 
 extern "C" void memcpy(void* dest, const void* src, size_t count);
 extern "C" void *memset(void* dest, int value, size_t count);
