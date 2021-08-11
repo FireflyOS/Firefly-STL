@@ -89,7 +89,7 @@ int atoi(const char* str) {
     return ret;
 }
 
-int printf([[maybe_unused]] const char* fmt, ...) {
+int printf(const char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     int i = 0;
@@ -161,6 +161,11 @@ int printf([[maybe_unused]] const char* fmt, ...) {
         }
     }
     return res;
+}
+
+void puts(const char *str)
+{
+    firefly::libkern::print(str);
 }
 
 // int sprintf()
