@@ -5,6 +5,7 @@
 #include <stdarg.h>
 
 #ifdef I386
+#include <i386/drivers/vbe.hpp>
 #include <i386/libk++/iostream.h>
 #else
 #include <x86_64/libk++/iostream.h>
@@ -89,6 +90,84 @@ int atoi(const char* str) {
     return ret;
 }
 
+//A short hack to use vga on x86-64 and vbe on i386, we'll remove this once vbe works on x86-64
+#ifdef I386
+int printf(const char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int i = 0;
+    int len = strlen(fmt);
+    int res = 0;
+
+    for (; i < len; i++) {
+        switch (fmt[i]) {
+            case '%': {
+                switch (fmt[i + 1]) {
+                    case 'c': {
+                        char arg = va_arg(ap, int);
+                        firefly::drivers::vbe::putc(arg);
+                        i += 2, ++res;
+                        break;
+                    }
+
+                    case 's': {
+                        char* arg = va_arg(ap, char*);
+                        firefly::drivers::vbe::puts(arg);
+                        i += 2, (res += 2 + strlen(arg));
+                        break;
+                    }
+
+                    case 'i':
+                    case 'd': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::drivers::vbe::puts(itoa(arg, buff, 10));
+                        res += digitcount(arg);
+                        i += 2;
+                        break;
+                    }
+
+                    case 'x': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::drivers::vbe::puts(itoa(arg, buff, 16));
+                        res += strlen(buff);
+                        i += 2;
+                        break;
+                    }
+                    case 'X': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::drivers::vbe::puts(itoa(arg, buff, 16, true));
+                        res += strlen(buff);
+                        i += 2;
+                        break;
+                    }
+
+                    case 'o': {
+                        size_t arg = va_arg(ap, size_t);
+                        char buff[20];
+                        firefly::drivers::vbe::puts(itoa(arg, buff, 8));
+                        i += 2;
+                        break;
+                    }
+                    default:
+                        va_end(ap);
+                        break;
+                }
+            }
+            default:
+                firefly::drivers::vbe::putc(fmt[i]);
+                va_end(ap);
+                res++;
+                break;
+        }
+    }
+    return res;
+}
+
+void puts(const char* str) { firefly::drivers::vbe::puts(str); }
+#else
 int printf(const char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -163,9 +242,6 @@ int printf(const char* fmt, ...) {
     return res;
 }
 
-void puts(const char *str)
-{
-    firefly::libkern::print(str);
-}
-
+void puts(const char* str) { firefly::libkern::print(str); }
+#endif
 // int sprintf()

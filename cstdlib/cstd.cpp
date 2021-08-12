@@ -18,22 +18,6 @@ extern "C" void memcpy(void* dest, const void* src, size_t count) {
     }
 }
 
-#include "cstring.h"
-
-/**
- * @brief		sets n bytes starting at address s to the value c
- * @param s		destination
- * @param c		value to set
- * @param n		amount of bytes to set
- * @return		s
- */
-void *memset(void *s, char c, int n) {
-    char *ptr = reinterpret_cast<char *>(s);
-    while (n--)
-        *ptr++ = c;
-    return s;
-}
-
 /**
  * @brief		compares n bytes of two blocks of memory
  * @param s1		the first block
