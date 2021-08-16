@@ -7,5 +7,5 @@ float powf(float base, int exponent);
 size_t pow(size_t base, size_t exponent);
 
 double ln(double x);
-int log2(uint64_t x);
+int log2(uint64_t value);
 double log10( double x );
