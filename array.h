@@ -61,11 +61,11 @@ namespace firefly::std {
             return data[idx];
         }
 
-        [[nodiscard]] constexpr size_t max_size() {
+        [[nodiscard]] constexpr size_t max_size() const noexcept {
             return N;
         }
 
-        [[nodiscard]] constexpr size_t size() {
+        [[nodiscard]] constexpr size_t size() const noexcept {
             return N;
         }
     };
