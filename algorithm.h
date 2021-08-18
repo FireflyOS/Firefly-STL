@@ -1,14 +1,14 @@
 #pragma once
 
 namespace firefly::std {
-    template<class ForwardIt, class T>
-    void fill(ForwardIt first, const ForwardIt last, const T &value) {
+    template <class ForwardIt, class T>
+    void fill(ForwardIt first, const ForwardIt last, const T& value) {
         for (; first != last; ++first) {
             *first = value;
         }
     }
 
-    template<class InputIt, class OutputIt>
+    template <class InputIt, class OutputIt>
     OutputIt copy(InputIt first, const InputIt last, OutputIt d_first) {
         while (first != last) {
             *d_first++ = *first++;
@@ -16,10 +16,11 @@ namespace firefly::std {
         return d_first;
     }
 
-    template<typename InputIt, typename OutputIt, typename UnaryPredicate>
-    OutputIt copy_if(InputIt begin, const InputIt end, OutputIt write, UnaryPredicate func) {
+    template <typename InputIt, typename OutputIt, typename UnaryPredicate>
+    OutputIt copy_if(InputIt begin, const InputIt end, OutputIt write,
+                     UnaryPredicate func) {
         while (begin < end) {
-            if (!func(*begin)) {
+            if (! func(*begin)) {
                 continue;
             }
             *(write++) = *(begin++);
@@ -27,7 +28,21 @@ namespace firefly::std {
         return write;
     }
 
-    
+    template <typename InputIt>
+    InputIt max_element(InputIt first, InputIt last) {
+        if (first == last)
+            return last;
+
+        InputIt largest = first;
+        ++first;
+        for (; first != last; ++first) {
+            if (*largest < *first) {
+                largest = first;
+            }
+        }
+        return largest;
+    }
+
     /*
     template <class RandomIt>
     void sort(RandomIt first, RandomIt last) {
@@ -44,4 +59,4 @@ namespace firefly::std {
 
     }
      */
-}  // namespace firefly::std
+} // namespace firefly::std
