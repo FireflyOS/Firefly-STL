@@ -68,6 +68,15 @@ namespace firefly::std {
         [[nodiscard]] constexpr size_t size() const noexcept {
             return N;
         }
+        
+        [[nodiscard]] constexpr bool operator==(array<T, N> const& other) const noexcept {
+            for (size_t i = 0; i < other.max_size(); i++) {
+                if (other[i] != (*this)[i]) { 
+                    return false; 
+                }
+            }
+            return true;
+        } 
     };
 
 }  // namespace firefly::std
