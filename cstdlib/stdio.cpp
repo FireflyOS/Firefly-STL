@@ -3,8 +3,8 @@
 #include "cstring.h"
 
 #include <stdarg.h>
-#include <x86_64/drivers/vbe.hpp>
-#include <x86_64/libk++/iostream.h>
+#include "x86_64/tty/boot-tty.hpp"
+#include "x86_64/libk++/iostream.h"
 
 char itoc(int num) { return '0' + num; }
 
@@ -98,14 +98,14 @@ int printf(const char* fmt, ...) {
                 switch (fmt[i + 1]) {
                     case 'c': {
                         char arg = va_arg(ap, int);
-                        firefly::drivers::vbe::putc(arg);
+                        firefly::kernel::tty::putc(arg);
                         i += 2, ++res;
                         break;
                     }
 
                     case 's': {
                         char* arg = va_arg(ap, char*);
-                        firefly::drivers::vbe::puts(arg);
+                        firefly::kernel::tty::puts(arg);
                         i += 2, (res += 2 + strlen(arg));
                         break;
                     }
@@ -114,11 +114,10 @@ int printf(const char* fmt, ...) {
                     case 'd': {
                         size_t arg = va_arg(ap, size_t);
                         if (arg == 0)
-                            firefly::drivers::vbe::putc('0');
-                        else
-                        {
+                            firefly::kernel::tty::putc('0');
+                        else {
                             char buff[20];
-                            firefly::drivers::vbe::puts(itoa(arg, buff, 10));
+                            firefly::kernel::tty::puts(itoa(arg, buff, 10));
                             res += digitcount(arg);
                         }
                         i += 2;
@@ -127,17 +126,25 @@ int printf(const char* fmt, ...) {
 
                     case 'x': {
                         size_t arg = va_arg(ap, size_t);
-                        char buff[20];
-                        firefly::drivers::vbe::puts(itoa(arg, buff, 16));
-                        res += strlen(buff);
+                        if (arg == 0) {
+                            firefly::kernel::tty::putc('0');
+                        } else {
+                            char buff[20];
+                            firefly::kernel::tty::puts(itoa(arg, buff, 16));
+                            res += strlen(buff);
+                        }
                         i += 2;
                         break;
                     }
                     case 'X': {
                         size_t arg = va_arg(ap, size_t);
-                        char buff[20];
-                        firefly::drivers::vbe::puts(itoa(arg, buff, 16, true));
-                        res += strlen(buff);
+                        if (arg == 0) {
+                            firefly::kernel::tty::putc('0');
+                        } else {
+                            char buff[20];
+                            firefly::kernel::tty::puts(itoa(arg, buff, 16, true));
+                            res += strlen(buff);
+                        }
                         i += 2;
                         break;
                     }
@@ -145,7 +152,7 @@ int printf(const char* fmt, ...) {
                     case 'o': {
                         size_t arg = va_arg(ap, size_t);
                         char buff[20];
-                        firefly::drivers::vbe::puts(itoa(arg, buff, 8));
+                        firefly::kernel::tty::puts(itoa(arg, buff, 8));
                         i += 2;
                         break;
                     }
@@ -155,7 +162,7 @@ int printf(const char* fmt, ...) {
                 }
             }
             default:
-                firefly::drivers::vbe::putc(fmt[i]);
+                firefly::kernel::tty::putc(fmt[i]);
                 va_end(ap);
                 res++;
                 break;
@@ -164,6 +171,6 @@ int printf(const char* fmt, ...) {
     return res;
 }
 
-void puts(const char* str) { firefly::drivers::vbe::puts(str); }
+void puts(const char* str) { firefly::kernel::tty::puts(str); }
 
 // int sprintf()
