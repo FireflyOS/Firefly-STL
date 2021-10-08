@@ -21,6 +21,7 @@ namespace firefly::std {
                      UnaryPredicate func) {
         while (begin < end) {
             if (! func(*begin)) {
+                begin++;
                 continue;
             }
             *(write++) = *(begin++);
