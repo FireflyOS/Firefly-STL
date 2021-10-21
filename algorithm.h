@@ -44,6 +44,25 @@ namespace firefly::std {
         return largest;
     }
 
+    template <typename InputIt, typename UnaryPredicate>
+    typename std::iterator_traits<InputIt>::difference_type count_if(InputIt first, const InputIt last, 
+        UnaryPredicate func) {
+        typename std::iterator_traits<InputIt>::difference_type count = 0;
+
+        for (; first != last; first++) {
+            if (func(*first))
+                count++;
+        }
+
+        return count;
+    }
+
+    template <typename InputIt, typename T>
+    typename std::iterator_traits<InputIt>::difference_type count(InputIt first, const InputIt last,
+        const T& lval) {
+        return count_if(first, last, [&](const T& rval){ return lval == rval; });
+    }
+
     /*
     template <class RandomIt>
     void sort(RandomIt first, RandomIt last) {
