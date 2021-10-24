@@ -69,6 +69,13 @@ namespace firefly::std {
         return last;
     }
 
+    template <typename BidirectionalIterator>
+    void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+        while ((first != last) && (first != last--)) {
+            std::swap(*first, *last);
+            first++;
+        }
+    }
 
     /*
     template <class RandomIt>
