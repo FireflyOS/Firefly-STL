@@ -44,6 +44,32 @@ namespace firefly::std {
         return largest;
     }
 
+
+    template <typename ForwardIt, typename UnaryPredicate>
+    ForwardIt find_if(InputIt first, const InputIt last,
+        UnaryPredicate func) {
+
+        for (; first != last; first++) {
+            if (func(*first))
+                return first;
+        }
+
+        return last;
+    } 
+
+    template <typename ForwardIt, typename T>
+    ForwardIt find(InputIt first, const InputIt last,
+        const T& val) {
+
+        for (; first != last; first++) {
+            if (*first == val)
+                return first;
+        }
+
+        return last;
+    }
+
+
     /*
     template <class RandomIt>
     void sort(RandomIt first, RandomIt last) {
