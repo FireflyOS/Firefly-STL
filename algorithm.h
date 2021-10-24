@@ -1,3 +1,4 @@
+#include "cstdlib/cstdint.h"
 #pragma once
 
 namespace firefly::std {
@@ -45,9 +46,9 @@ namespace firefly::std {
     }
 
     template <typename InputIt, typename UnaryPredicate>
-    typename std::iterator_traits<InputIt>::difference_type count_if(InputIt first, const InputIt last, 
+    std::size_t count_if(InputIt first, const InputIt last, 
         UnaryPredicate func) {
-        typename std::iterator_traits<InputIt>::difference_type count = 0;
+        std::size_t count = 0;
 
         for (; first != last; first++) {
             if (func(*first))
@@ -57,8 +58,7 @@ namespace firefly::std {
         return count;
     }
 
-    template <typename InputIt, typename T>
-    typename std::iterator_traits<InputIt>::difference_type count(InputIt first, const InputIt last,
+    template <typename InputIt, typename T> std::size_t count(InputIt first, const InputIt last,
         const T& lval) {
         return count_if(first, last, [&](const T& rval){ return lval == rval; });
     }
