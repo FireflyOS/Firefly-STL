@@ -60,7 +60,14 @@ namespace firefly::std {
 
     template <typename InputIt, typename T> std::size_t count(InputIt first, const InputIt last,
         const T& lval) {
-        return count_if(first, last, [&](const T& rval){ return lval == rval; });
+        std::size_t count = 0;
+        
+        for (; first != last; first++) {
+            if (*first == lval)
+                count++;
+        }
+
+        return count;
     }
 
     /*
