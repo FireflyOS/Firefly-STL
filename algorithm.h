@@ -44,6 +44,53 @@ namespace firefly::std {
         return largest;
     }
 
+    template <typename ForwardIt, typename UnaryPredicate>
+    ForwardIt find_if(InputIt first, const InputIt last,
+        UnaryPredicate func) {
+
+        for (; first != last; first++) {
+            if (func(*first))
+                return first;
+        }
+
+        return last;
+    } 
+
+    template <typename ForwardIt, typename T>
+    ForwardIt find(InputIt first, const InputIt last,
+        const T& val) {
+
+        for (; first != last; first++) {
+            if (*first == val)
+                return first;
+        }
+
+        return last;
+    }
+
+    template <typename BidirectionalIterator>
+    void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+        while ((first != last) && (first != last--)) {
+            std::swap(*first, *last);
+            first++;
+        }
+    }
+
+    template <typename ForwardIt>
+    ForwardIt rotate(const ForwardIt first, ForwardIt n_first, ForwardIt last) {
+        ForwardIt head = first;
+        ForwardIt tail = n_first;
+
+        if (first == n_first) return last;
+        if (last == n_first) return first;
+
+        while (tail != last) {
+            std::swap(*head++, *tail++);
+        }
+
+        return n_first;
+    }
+
     /*
     template <class RandomIt>
     void sort(RandomIt first, RandomIt last) {
