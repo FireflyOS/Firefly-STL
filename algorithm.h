@@ -44,7 +44,6 @@ namespace firefly::std {
         return largest;
     }
 
-
     template <typename ForwardIt, typename UnaryPredicate>
     ForwardIt find_if(InputIt first, const InputIt last,
         UnaryPredicate func) {
@@ -75,6 +74,21 @@ namespace firefly::std {
             std::swap(*first, *last);
             first++;
         }
+    }
+
+    template <typename ForwardIt>
+    ForwardIt rotate(const ForwardIt first, ForwardIt n_first, ForwardIt last) {
+        ForwardIt head = first;
+        ForwardIt tail = n_first;
+
+        if (first == n_first) return last;
+        if (last == n_first) return first;
+
+        while (tail != last) {
+            std::swap(*head++, *tail++);
+        }
+
+        return n_first;
     }
 
     /*
