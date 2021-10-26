@@ -1,5 +1,5 @@
-#include "cstdlib/cstdint.h"
 #pragma once
+#include "cstdlib/cstdint.h"
 
 namespace firefly::std {
     template <class ForwardIt, class T>
