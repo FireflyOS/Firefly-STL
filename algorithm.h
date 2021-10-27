@@ -1,4 +1,5 @@
 #pragma once
+#include "cstdlib/cstdint.h"
 
 namespace firefly::std {
     template <class ForwardIt, class T>
@@ -42,6 +43,31 @@ namespace firefly::std {
             }
         }
         return largest;
+    }
+
+    template <typename InputIt, typename UnaryPredicate>
+    std::size_t count_if(InputIt first, const InputIt last, 
+        UnaryPredicate func) {
+        std::size_t count = 0;
+
+        for (; first != last; first++) {
+            if (func(*first))
+                count++;
+        }
+
+        return count;
+    }
+
+    template <typename InputIt, typename T> std::size_t count(InputIt first, const InputIt last,
+        const T& lval) {
+        std::size_t count = 0;
+        
+        for (; first != last; first++) {
+            if (*first == lval)
+                count++;
+        }
+
+        return count;
     }
 
     /*
