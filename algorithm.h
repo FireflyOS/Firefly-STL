@@ -46,9 +46,9 @@ namespace firefly::std {
     }
 
     template <typename InputIt, typename UnaryPredicate>
-    std::size_t count_if(InputIt first, const InputIt last, 
+    size_t count_if(InputIt first, const InputIt last, 
         UnaryPredicate func) {
-        std::size_t count = 0;
+        size_t count = 0;
 
         for (; first != last; first++) {
             if (func(*first))
@@ -58,9 +58,9 @@ namespace firefly::std {
         return count;
     }
 
-    template <typename InputIt, typename T> std::size_t count(InputIt first, const InputIt last,
+    template <typename InputIt, typename T> size_t count(InputIt first, const InputIt last,
         const T& lval) {
-        std::size_t count = 0;
+        size_t count = 0;
         
         for (; first != last; first++) {
             if (*first == lval)
