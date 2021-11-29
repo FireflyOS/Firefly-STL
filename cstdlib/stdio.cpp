@@ -4,6 +4,7 @@
 
 #include <stdarg.h>
 #include "x86_64/fb/framebuffer.hpp"
+#include "x86_64/fb/stivale2-term.hpp"
 #include "x86_64/libk++/iostream.h"
 
 char itoc(int num) { return '0' + num; }
@@ -32,7 +33,7 @@ char* strrev(char* src) {
     return src;
 }
 
-char* itoa(size_t num, char* str, int base) {
+void itoa(size_t num, char* str, int base) {
     size_t buffer_sz = 20;
     size_t counter = 0;
     size_t digit = 0;
@@ -48,16 +49,17 @@ char* itoa(size_t num, char* str, int base) {
     }
 
     str[counter] = '\0';
-    return strrev(str);
+    strrev(str);
 }
 
-char* itoa(size_t num, char* str, int base, bool upper) {
-    [[maybe_unused]] size_t buffer_sz = 20;
-    [[maybe_unused]] size_t counter = 0;
-    [[maybe_unused]] size_t digit = 0;
+void itoa(size_t num, char* str, int base, bool upper) {
+    size_t buffer_sz = 20;
+    size_t counter = 0;
+    size_t digit = 0;
 
-    if (! upper) {
-        return itoa(num, str, base);
+    if (!upper) {
+        itoa(num, str, base);
+        return;
     } else {
         while (num != 0 && counter < buffer_sz - 1) {
             digit = (num % base);
@@ -71,7 +73,7 @@ char* itoa(size_t num, char* str, int base, bool upper) {
     }
 
     str[counter] = '\0';
-    return strrev(str);
+    strrev(str);
 }
 
 int atoi(const char* str) {
@@ -85,92 +87,110 @@ int atoi(const char* str) {
     return ret;
 }
 
+char buffer[512];
+int vsnprintf(char *str, size_t size, const char *fmt, va_list ap);
 int printf(const char* fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    int i = 0;
-    int len = strlen(fmt);
-    int res = 0;
+    vsnprintf((char *)&buffer, (size_t)511, fmt, ap);
+    va_end(ap);
 
-    for (; i < len; i++) {
-        switch (fmt[i]) {
-            case '%': {
-                switch (fmt[i + 1]) {
-                    case 'c': {
-                        char arg = va_arg(ap, int);
-                        firefly::kernel::device::fb::putc(arg);
-                        i += 2, ++res;
-                        break;
-                    }
-
-                    case 's': {
-                        char* arg = va_arg(ap, char*);
-                        firefly::kernel::device::fb::puts(arg);
-                        i += 2, (res += 2 + strlen(arg));
-                        break;
-                    }
-
-                    case 'i':
-                    case 'd': {
-                        size_t arg = va_arg(ap, size_t);
-                        if (arg == 0)
-                            firefly::kernel::device::fb::putc('0');
-                        else {
-                            char buff[20];
-                            firefly::kernel::device::fb::puts(itoa(arg, buff, 10));
-                            res += digitcount(arg);
-                        }
-                        i += 2;
-                        break;
-                    }
-
-                    case 'x': {
-                        size_t arg = va_arg(ap, size_t);
-                        if (arg == 0) {
-                            firefly::kernel::device::fb::putc('0');
-                        } else {
-                            char buff[20];
-                            firefly::kernel::device::fb::puts(itoa(arg, buff, 16));
-                            res += strlen(buff);
-                        }
-                        i += 2;
-                        break;
-                    }
-                    case 'X': {
-                        size_t arg = va_arg(ap, size_t);
-                        if (arg == 0) {
-                            firefly::kernel::device::fb::putc('0');
-                        } else {
-                            char buff[20];
-                            firefly::kernel::device::fb::puts(itoa(arg, buff, 16, true));
-                            res += strlen(buff);
-                        }
-                        i += 2;
-                        break;
-                    }
-
-                    case 'o': {
-                        size_t arg = va_arg(ap, size_t);
-                        char buff[20];
-                        firefly::kernel::device::fb::puts(itoa(arg, buff, 8));
-                        i += 2;
-                        break;
-                    }
-                    default:
-                        va_end(ap);
-                        break;
-                }
-            }
-            default:
-                firefly::kernel::device::fb::putc(fmt[i]);
-                va_end(ap);
-                res++;
-                break;
-        }
-    }
-    return res;
+    firefly::kernel::device::stivale2_term::write(buffer);
+    
+    return 0;
 }
 
 void puts(const char* str) { firefly::kernel::device::fb::puts(str); }
 
-// int sprintf()
+int vsnprintf(char *str, size_t size, const char *fmt, va_list ap)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        switch (fmt[i])
+        {
+            case '%':
+            {
+                switch (fmt[i + 1])
+                {
+                    case 'c':
+                        str[i] = va_arg(ap, int);
+                        i++;
+                        break;
+
+                    case 's':
+                    {
+                        auto arg = va_arg(ap, char*);
+                        size_t len = strlen(arg);
+                        for (size_t j = 0; j < len; j++)
+                            *str++ = arg[j];
+                        
+                        i++;
+                        break;
+                    }
+
+                    case 'i':
+                    case 'd':
+                    {
+                        uint64_t arg = va_arg(ap, uint64_t);
+                        if (arg == 0)
+                            *str++ = '0';
+                        else {
+                            char res[20];
+                            itoa(arg, res, 10);
+                            
+                            size_t len = strlen(res);
+                            for (size_t j = 0; j < len; j++)
+                                *str++ = res[j];
+                        }
+                        i++;
+                        break;
+                    }
+
+                    case 'x':
+                    {
+                        uint64_t arg = va_arg(ap, uint64_t);
+                        if (arg == 0)
+                            *str++ = '0';
+                        else {
+                            char res[20];
+                            itoa(arg, res, 16);
+                            
+                            size_t len = strlen(res);
+                            for (size_t j = 0; j < len; j++)
+                                *str++ = res[j];
+
+                        }
+                        i++;
+                        break;
+                    }
+
+                    case 'X':
+                    {
+                        uint64_t arg = va_arg(ap, uint64_t);
+                        char res[20];
+                        if (arg == 0)
+                            *str++ = '0';
+                        else {
+                            itoa(arg, res, 16, true);
+                            
+                            size_t len = strlen(res);
+                            for (size_t j = 0; j < len; j++)
+                                *str++ = res[j];
+                        }
+                        i++;
+                        break;
+                    }
+                }
+
+                break;
+            }
+        
+            default:
+                *str++ = fmt[i];
+                break;
+        }
+    }
+    *str++ = '\0';
+
+    return 0;
+}
