@@ -70,6 +70,28 @@ namespace firefly::std {
         return count;
     }
 
+    template <typename InputIt> size_t
+    accumulate(InputIt begin, InputIt end) {
+        size_t sum = 0;
+
+        while (begin != end) {
+            sum += *begin;
+        }
+
+        return sum;
+    }
+
+    template <typename InputIt, typename Op> size_t
+    accumulate(InputIt begin, InputIt end, Op op) {
+        size_t sum = 0;
+
+        while (begin != end) {
+            sum = op(sum, *begin);
+        }
+
+        return sum;
+    }
+
     /*
     template <class RandomIt>
     void sort(RandomIt first, RandomIt last) {
